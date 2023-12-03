@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-channels-table" author="natalapetracenko@gmail.com">
+        <createTable schemaName="channels-db" tableName="channels">
+            <column name="chanel_id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time" type="TIMESTAMP(0) WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP(0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="language" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_uuid" type="VARCHAR(50)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="category" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableSchemaName="channels-db"
+                                 baseTableName="channels" baseColumnNames="user_id"
+                                 constraintName="fk_channel_user"
+                                 referencedTableSchemaName="channels-db"
+                                 referencedTableName="appusers" referencedColumnNames="user_id" />
+    </changeSet>
+
+    <changeSet id="create-channels-users-table" author="natalapetracenko@gmail.com">
+        <createTable schemaName="channels-db" tableName="channels_users">
+            <column name="chanel_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey schemaName="channels-db" tableName="channels_users"
+                       columnNames="chanel_id, user_id" constraintName="pk_channels_users"/>
+
+        <addForeignKeyConstraint baseTableSchemaName="channels-db"
+                                 baseTableName="channels_users" baseColumnNames="chanel_id"
+                                 constraintName="fk_channels_users_channel"
+                                 referencedTableSchemaName="channels-db"
+                                 referencedTableName="channels" referencedColumnNames="chanel_id" />
+
+        <addForeignKeyConstraint baseTableSchemaName="channels-db"
+                                 baseTableName="channels_users" baseColumnNames="user_id"
+                                 constraintName="fk_channels_users_user"
+                                 referencedTableSchemaName="channels-db"
+                                 referencedTableName="appusers" referencedColumnNames="user_id" />
+    </changeSet>
+
+</databaseChangeLog>
