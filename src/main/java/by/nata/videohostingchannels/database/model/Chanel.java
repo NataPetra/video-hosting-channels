@@ -1,6 +1,5 @@
 package by.nata.videohostingchannels.database.model;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,7 +10,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -69,11 +67,8 @@ public class Chanel implements Serializable {
     @Column(nullable = false, length = 20)
     private String language;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "image_id")
-    private Image image;
+    @Column(name = "image_uuid", nullable = false, length = 50, unique = true)
+    private String image;
 
     @Column(nullable = false, length = 30)
     private String category;
