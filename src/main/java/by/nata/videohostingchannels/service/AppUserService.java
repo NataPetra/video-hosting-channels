@@ -1,5 +1,6 @@
 package by.nata.videohostingchannels.service;
 
+import by.nata.videohostingchannels.controller.exception.UserAlreadyExistException;
 import by.nata.videohostingchannels.database.model.AppUser;
 import by.nata.videohostingchannels.database.model.Chanel;
 import by.nata.videohostingchannels.database.repository.AppUserRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -23,6 +25,9 @@ public class AppUserService {
 
     @Transactional
     public AppUserResponseDto saveUser(AppUserRequestDto userDto) {
+        if (Objects.nonNull(findByLogin(userDto.login()))) {
+            throw new UserAlreadyExistException(String.format("User with login %s already exist", userDto.login()));
+        }
         return Optional.of(userDto)
                 .map(appUserMapper::dtoToEntity)
                 .map(userRepository::save)
@@ -60,5 +65,9 @@ public class AppUserService {
     @Transactional
     public boolean isAppUserExist(Long id) {
         return userRepository.existsById(id);
+    }
+
+    public AppUser findByLogin(String login) {
+        return userRepository.findAppUserByLogin(login);
     }
 }

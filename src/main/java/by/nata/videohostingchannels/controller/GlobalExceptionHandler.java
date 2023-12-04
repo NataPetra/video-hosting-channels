@@ -4,6 +4,7 @@ import by.nata.videohostingchannels.controller.exception.BadRequestException;
 import by.nata.videohostingchannels.controller.exception.ErrorResponse;
 import by.nata.videohostingchannels.controller.exception.ImageNotFoundException;
 import by.nata.videohostingchannels.controller.exception.ImageStorageException;
+import by.nata.videohostingchannels.controller.exception.UserAlreadyExistException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -74,6 +75,15 @@ public class GlobalExceptionHandler {
     public ErrorResponse handleImageNotFoundException(ImageNotFoundException exception) {
         return new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
+                exception.getMessage(),
+                ZonedDateTime.now().withZoneSameInstant(ZoneId.of(EUROPE_MINSK)));
+    }
+
+    @ExceptionHandler(UserAlreadyExistException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleUserAlreadyExistException(UserAlreadyExistException exception) {
+        return new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
                 exception.getMessage(),
                 ZonedDateTime.now().withZoneSameInstant(ZoneId.of(EUROPE_MINSK)));
     }
