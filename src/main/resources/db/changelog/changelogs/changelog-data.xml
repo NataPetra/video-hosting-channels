@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="data-for-languages" author="natalapetracenko@gmail.com">
+        <insert schemaName="channels-db" tableName="languages">
+            <column name="name" value="English"/>
+        </insert>
+        <insert schemaName="channels-db" tableName="languages">
+            <column name="name" value="Spanish"/>
+        </insert>
+        <insert schemaName="channels-db" tableName="languages">
+            <column name="name" value="French"/>
+        </insert>
+        <insert schemaName="channels-db" tableName="languages">
+            <column name="name" value="Russian"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="data-category" author="natalapetracenko@gmail.com">
+        <insert schemaName="channels-db" tableName="category">
+            <column name="name" value="Technology"/>
+        </insert>
+        <insert schemaName="channels-db" tableName="category">
+            <column name="name" value="Travel"/>
+        </insert>
+        <insert schemaName="channels-db" tableName="category">
+            <column name="name" value="Food"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="data-appusers" author="natalapetracenko@gmail.com">
+        <insert schemaName="channels-db" tableName="appusers">
+            <column name="login" value="user1"/>
+            <column name="name" value="User One"/>
+            <column name="email" value="user1@example.com"/>
+        </insert>
+        <insert schemaName="channels-db" tableName="appusers">
+            <column name="login" value="user2"/>
+            <column name="name" value="User Two"/>
+            <column name="email" value="user2@example.com"/>
+        </insert>
+        <insert schemaName="channels-db" tableName="appusers">
+            <column name="login" value="user3"/>
+            <column name="name" value="User Three"/>
+            <column name="email" value="user3@example.com"/>
+        </insert>
+        <insert schemaName="channels-db" tableName="appusers">
+            <column name="login" value="user4"/>
+            <column name="name" value="User Four"/>
+            <column name="email" value="user4@example.com"/>
+        </insert>
+        <insert schemaName="channels-db" tableName="appusers">
+            <column name="login" value="user5"/>
+            <column name="name" value="User Five"/>
+            <column name="email" value="user5@example.com"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="data-channels-users" author="natalapetracenko@gmail.com">
+
+        <insert schemaName="channels-db" tableName="channels">
+            <column name="name" value="Channel 1"/>
+            <column name="description" value="Description for Channel 1"/>
+            <column name="user_id" value="1"/>
+            <column name="language" value="English"/>
+            <column name="image_uuid" value="98765432-e89b-12d3-a456-426655440002"/>
+            <column name="category" value="Technology"/>
+        </insert>
+        <insert schemaName="channels-db" tableName="channels">
+            <column name="name" value="Channel 2"/>
+            <column name="description" value="Description for Channel 2"/>
+            <column name="user_id" value="2"/>
+            <column name="language" value="Spanish"/>
+            <column name="image_uuid" value="123e4567-e89b-12d3-a456-426655440001"/>
+            <column name="category" value="Travel"/>
+        </insert>
+        <insert schemaName="channels-db" tableName="channels">
+            <column name="name" value="Channel 3"/>
+            <column name="description" value="Description for Channel 3"/>
+            <column name="user_id" value="3"/>
+            <column name="language" value="French"/>
+            <column name="image_uuid" value="550e8400-e29b-41d4-a716-446655440000"/>
+            <column name="category" value="Food"/>
+        </insert>
+
+        <insert schemaName="channels-db" tableName="channels_users">
+            <column name="chanel_id" value="1"/>
+            <column name="user_id" value="2"/>
+        </insert>
+        <insert schemaName="channels-db" tableName="channels_users">
+            <column name="chanel_id" value="2"/>
+            <column name="user_id" value="1"/>
+        </insert>
+        <insert schemaName="channels-db" tableName="channels_users">
+            <column name="chanel_id" value="3"/>
+            <column name="user_id" value="1"/>
+        </insert>
+        <insert schemaName="channels-db" tableName="channels_users">
+            <column name="chanel_id" value="1"/>
+            <column name="user_id" value="3"/>
+        </insert>
+        <insert schemaName="channels-db" tableName="channels_users">
+            <column name="chanel_id" value="1"/>
+            <column name="user_id" value="4"/>
+        </insert>
+        <insert schemaName="channels-db" tableName="channels_users">
+            <column name="chanel_id" value="1"/>
+            <column name="user_id" value="5"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
