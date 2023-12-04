@@ -12,9 +12,9 @@ import by.nata.videohostingchannels.service.mapper.ChanelMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,12 +26,25 @@ public class ChanelService {
     private final ChanelMapper chanelMapper;
     private final AppUserService appUserService;
 
-    public ChanelResponseDto createOrUpdateChanel(ChanelRequestDto chanelDto) {
+    @Transactional
+    public ChanelResponseDto saveChanel(ChanelRequestDto chanelDto) {
         Chanel chanelEntity = chanelMapper.dtoToEntity(chanelDto);
         Chanel savedChanel = chanelRepository.save(chanelEntity);
         return chanelMapper.entityToDto(savedChanel);
     }
 
+    @Transactional
+    public ChanelResponseDto updateChanel(ChanelRequestDto chanelDto, Long chanelId) {
+        Chanel chanel = getChanelById(chanelId);
+
+        chanel.setName(chanelDto.name());
+        chanel.setDescription(chanelDto.description());
+
+        Chanel savedChanel = chanelRepository.save(chanel);
+        return chanelMapper.entityToDto(savedChanel);
+    }
+
+    @Transactional
     public void subscribeUserToChanel(Long userId, Long chanelId) {
         AppUser user = appUserService.getAppUserById(userId);
         Chanel chanel = getChanelById(chanelId);
@@ -41,6 +54,7 @@ public class ChanelService {
         chanelRepository.save(chanel);
     }
 
+    @Transactional
     public void unsubscribeUserFromChanel(Long userId, Long chanelId) {
         AppUser user = appUserService.getAppUserById(userId);
         Chanel chanel = getChanelById(chanelId);
@@ -50,24 +64,28 @@ public class ChanelService {
         chanelRepository.save(chanel);
     }
 
-    public Page<ChanelSummaryDto> findAllChannelsWithFilters(
+    @Transactional(readOnly = true)
+    public List<ChanelSummaryDto> findAllChannelsWithFilters(
             String name, String language, String category, Pageable pageable) {
-        List<Chanel> channels = chanelRepository.findAll(ChanelSpecifications.withFilters(name, language, category));
+        Page<Chanel> channels = chanelRepository.findAll(ChanelSpecifications.withFilters(name, language, category), pageable);
 
-        List<ChanelSummaryDto> chanelSummaryDtoList = channels.stream()
+        return channels.stream()
                 .map(chanelMapper::entityToSummaryDto)
                 .toList();
-
-        return new PageImpl<>(chanelSummaryDtoList, pageable, channels.size());
     }
 
+    @Transactional(readOnly = true)
     public ChanelDetailsDto getChanelDetailsById(Long chanelId) {
         Chanel chanel = getChanelById(chanelId);
         return chanelMapper.entityToDetailsDto(chanel);
     }
 
-    private Chanel getChanelById(Long chanelId) {
+    public Chanel getChanelById(Long chanelId) {
         return chanelRepository.findById(chanelId)
                 .orElseThrow(() -> new EntityNotFoundException("Chanel not found with id: " + chanelId));
+    }
+
+    public boolean isChanelExist(Long id) {
+        return chanelRepository.existsById(id);
     }
 }

@@ -9,6 +9,7 @@ import by.nata.videohostingchannels.service.mapper.AppUserMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,14 +21,29 @@ public class AppUserService {
     private final AppUserRepository userRepository;
     private final AppUserMapper appUserMapper;
 
-    public AppUserResponseDto saveOrUpdateUser(AppUserRequestDto userDto) {
+    @Transactional
+    public AppUserResponseDto saveUser(AppUserRequestDto userDto) {
         return Optional.of(userDto)
                 .map(appUserMapper::dtoToEntity)
                 .map(userRepository::save)
                 .map(appUserMapper::entityToDto)
-                .orElseThrow(() -> new IllegalArgumentException("Failed to save or update user"));
+                .orElseThrow(() -> new IllegalArgumentException("Failed to save user"));
     }
 
+    @Transactional
+    public AppUserResponseDto updateUser(AppUserRequestDto userDto, Long id) {
+        AppUser existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+
+        existingUser.setLogin(userDto.login());
+        existingUser.setName(userDto.name());
+        existingUser.setEmail(userDto.email());
+
+        AppUser updatedUser = userRepository.save(existingUser);
+        return appUserMapper.entityToDto(updatedUser);
+    }
+
+    @Transactional(readOnly = true)
     public List<String> getUserSubscriptions(Long userId) {
         AppUser user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         List<Chanel> subscribedChannels = user.getSubscribedChannels();
@@ -35,11 +51,13 @@ public class AppUserService {
         return subscribedChannels.stream().map(Chanel::getName).toList();
     }
 
+    @Transactional(readOnly = true)
     public AppUser getAppUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("AppUser not found with id: " + userId));
     }
 
+    @Transactional
     public boolean isAppUserExist(Long id) {
         return userRepository.existsById(id);
     }

@@ -54,7 +54,7 @@ public class Chanel implements Serializable {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "channels_users",
+    @JoinTable(schema = "channels-db", name = "channels_users",
             joinColumns = @JoinColumn(name = "chanel_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<AppUser> subscribers;
