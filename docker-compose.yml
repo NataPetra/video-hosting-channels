@@ -1,9 +1,11 @@
 version: '3.8'
 services:
 
-  news-service:
+  channels-service:
     image: video-hosting-channels-1.0.0
-    build: video-hosting-channels
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
     restart: always
     depends_on:
       database-channels-service:
